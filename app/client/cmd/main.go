@@ -16,18 +16,12 @@ import (
 )
 
 func main() {
-	ctx := context.Background()
 	cfg := config.LoadConfig(".")
 
 	logger.New(cfg.Logger.Level)
-	db, err := postgres.NewPostgres(cfg.Database.Client)
+	db, err := postgres.NewPostgres(cfg.Database)
 	if err != nil {
 		logrus.Fatalf("NewPostgres: %v", err)
-	}
-
-	err = db.Ping(ctx)
-	if err != nil {
-		logrus.Fatalf("Ping DB error: %v", err)
 	}
 
 	ct := service.New(db)
