@@ -6,6 +6,7 @@ require (
 	github.com/go-pg/pg/v10 v10.12.0
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
+	golang.org/x/crypto v0.17.0
 )
 
 require (
@@ -21,13 +22,13 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.3.4 // indirect
 	github.com/vmihailenco/tagparser v0.1.2 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	golang.org/x/crypto v0.17.0 // indirect
 	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	mellium.im/sasl v0.3.1 // indirect
 )
 
 require (
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.5.0
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/pkg/errors v0.9.1

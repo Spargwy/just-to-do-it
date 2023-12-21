@@ -5,14 +5,14 @@ import (
 	"github.com/google/uuid"
 )
 
-func (s *ClientTasker) TasksList() ([]*models.Task, error) {
+func (s *ClientExecutor) TasksList() ([]*models.Task, error) {
 	return nil, nil
 }
 
-func (s *ClientTasker) TaskByID(id uuid.UUID) (*models.Task, error) {
+func (s *ClientExecutor) TaskByID(id uuid.UUID) (*models.Task, error) {
 	return nil, nil
 }
 
-func (s *ClientTasker) CreateTask() error {
+func (s *ClientExecutor) CreateTask() error {
 	return nil
 }

@@ -10,6 +10,8 @@ import (
 	"github.com/Spargwy/just-to-do-it/app/client/api"
 	"github.com/Spargwy/just-to-do-it/app/client/db/postgres"
 	"github.com/Spargwy/just-to-do-it/app/client/service"
+	"github.com/Spargwy/just-to-do-it/pkg/auth/bcrypt"
+	"github.com/Spargwy/just-to-do-it/pkg/auth/jwt"
 	"github.com/Spargwy/just-to-do-it/pkg/config"
 	"github.com/Spargwy/just-to-do-it/pkg/logger"
 	"github.com/sirupsen/logrus"
@@ -24,9 +26,13 @@ func main() {
 		logrus.Fatalf("NewPostgres: %v", err)
 	}
 
-	ct := service.New(db)
+	jwt := jwt.New(cfg.Authenticator.JwtPath)
 
-	server := api.New(ct)
+	encrypter := bcrypt.New(cfg.Encrypter.Cost)
+
+	executor := service.New(db, encrypter, jwt)
+
+	server := api.New(&executor, jwt)
 
 	go func() {
 		if err := server.Start(cfg.Server.Port); err != nil && err != http.ErrServerClosed {
