@@ -9,9 +9,11 @@ import (
 )
 
 type Config struct {
-	Database Database
-	Server   Server
-	Logger   Logger
+	Database      Database
+	Server        Server
+	Logger        Logger
+	Authenticator Authenticator
+	Encrypter
 }
 
 type Database struct {
@@ -29,8 +31,16 @@ type Logger struct {
 	Level string `envconfig:"LOG_LEVEL"`
 }
 
+type Authenticator struct {
+	JwtPath string `envconfig:"JWT_PATH"`
+}
+
+type Encrypter struct {
+	Cost int `envconfig:"BCRYPT_COST"`
+}
+
 func LoadConfig(path string) *Config {
-	c := filepath.Join(path, ".env")
+	c := filepath.Join(path, ".env.example")
 	err := godotenv.Load(c)
 	if err != nil {
 		logrus.Fatalf("error load .env file, err: %v", err)

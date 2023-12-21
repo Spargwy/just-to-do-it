@@ -98,7 +98,8 @@ CREATE TABLE public.tasks (
 
 CREATE TABLE public.users (
     id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
-    name character varying(80),
+    email character varying(255) NOT NULL,
+    name character varying(255),
     hashed_password character varying(72) NOT NULL
 );
 
@@ -135,6 +136,14 @@ ALTER TABLE ONLY public.task_groups
 
 ALTER TABLE ONLY public.tasks
     ADD CONSTRAINT tasks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_email_key UNIQUE (email);
 
 
 --

@@ -6,21 +6,39 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/Spargwy/just-to-do-it/pkg/auth/model"
 	"github.com/Spargwy/just-to-do-it/pkg/logger"
 	"github.com/labstack/echo"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
 
-type Server struct {
-	router *echo.Echo
-	tasker *Tasker
+type Authenticator interface {
+	Generate(claims *model.CustomClaims) (string, error)
+	Parse(t string) (*model.CustomClaims, error)
 }
 
-func New(tasker Tasker) *Server {
+type Server struct {
+	router   *echo.Echo
+	executor Executor
+}
+
+type response struct {
+	Success bool        `json:"success"`
+	Data    interface{} `json:"data,omitempty"`
+}
+
+func wrapResponse(data interface{}) response {
+	return response{
+		Success: true,
+		Data:    data,
+	}
+}
+
+func New(executor Executor, jwt Authenticator) *Server {
 	s := &Server{
-		tasker: &tasker,
-		router: echo.New(),
+		router:   echo.New(),
+		executor: executor,
 	}
 
 	s.setupRoutes()
@@ -31,8 +49,13 @@ func New(tasker Tasker) *Server {
 func (s *Server) setupRoutes() {
 	s.router.HTTPErrorHandler = errorHandler
 
+	auth := s.router.Group("/auth")
+	auth.POST("/register", s.Register)
+	auth.POST("/login", s.Login)
+
 	home := s.router.Group("/", s.Authorize)
-	home.GET("", s.Home)
+	home.GET("", func(ctx echo.Context) error { return ctx.JSON(http.StatusOK, "Hello") })
+
 }
 
 func errorHandler(err error, c echo.Context) {

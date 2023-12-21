@@ -36,18 +36,39 @@ func (c *ClientPGDB) Ping(ctx context.Context) error {
 	return c.db.Ping(ctx)
 }
 
-func (c *ClientPGDB) ClientTasks() ([]*models.Task, error) {
+func (c *ClientPGDB) TasksList() ([]*models.Task, error) {
 	return nil, nil
 }
 
-func (db *ClientPGDB) TasksList() ([]*models.Task, error) {
+func (c *ClientPGDB) TaskByID(id uuid.UUID) (*models.Task, error) {
 	return nil, nil
 }
 
-func (db *ClientPGDB) TaskByID(id uuid.UUID) (*models.Task, error) {
-	return nil, nil
-}
-
-func (db *ClientPGDB) CreateTask() error {
+func (c *ClientPGDB) CreateTask() error {
 	return nil
+}
+
+func (c *ClientPGDB) CreateUser(user *models.User) error {
+	return c.db.RunInTransaction(context.Background(), func(tx *pg.Tx) error {
+		_, err := c.db.Model(user).Insert()
+		return err
+	})
+}
+
+func (c *ClientPGDB) UserExistsByEmail(email string) (bool, error) {
+	var row models.User
+	exists, err := c.db.Model(&row).Where("email = ?", email).Exists()
+	return exists, err
+}
+
+func (c *ClientPGDB) GetUserByEmail(email string) (models.User, error) {
+	var row models.User
+	err := c.db.Model(&row).Where("email = ?", email).Select()
+	return row, err
+}
+
+func (c *ClientPGDB) GetUserByID(id uuid.UUID) (models.User, error) {
+	var row models.User
+	err := c.db.Model(&row).Where("id = ?", id).Select()
+	return row, err
 }
