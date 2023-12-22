@@ -24,6 +24,8 @@ start db with
 
 ```cd docker && docker-compose up -d ```
 
+
+
 Run project with
 
 ``` go run app/client/cmd/main.go```

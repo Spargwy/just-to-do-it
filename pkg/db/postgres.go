@@ -61,7 +61,7 @@ func (d longQueryLogger) AfterQuery(ctx context.Context, q *pg.QueryEvent) error
 	diff := time.Since(q.StartTime)
 	if diff.Seconds() > 1 {
 		sql, err := q.FormattedQuery()
-		logger.Info("detect slow query", string(sql), err, diff.Seconds())
+		logger.Info("detect slow query %s, %v, %f", string(sql), err, diff.Seconds())
 	}
 	return nil
 }
