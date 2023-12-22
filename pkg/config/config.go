@@ -40,7 +40,7 @@ type Encrypter struct {
 }
 
 func LoadConfig(path string) *Config {
-	c := filepath.Join(path, ".env.example")
+	c := filepath.Join(path, ".env")
 	err := godotenv.Load(c)
 	if err != nil {
 		logrus.Fatalf("error load .env file, err: %v", err)
