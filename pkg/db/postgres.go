@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/Spargwy/just-to-do-it/pkg/logger"
@@ -62,7 +61,7 @@ func (d longQueryLogger) AfterQuery(ctx context.Context, q *pg.QueryEvent) error
 	diff := time.Since(q.StartTime)
 	if diff.Seconds() > 1 {
 		sql, err := q.FormattedQuery()
-		log.Println("detect slow query", string(sql), err, diff.Seconds())
+		logger.Info("detect slow query", string(sql), err, diff.Seconds())
 	}
 	return nil
 }
