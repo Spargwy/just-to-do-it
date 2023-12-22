@@ -17,6 +17,16 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// @title           Swagger Example API
+// @version         1.0
+// @description     This is a sample server celler server.
+
+// @host      localhost:3000
+// @BasePath  /
+
+// @securityDefinitions.basic ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	cfg := config.LoadConfig(".")
 

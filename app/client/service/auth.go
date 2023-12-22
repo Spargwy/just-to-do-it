@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/Spargwy/just-to-do-it/app/client/models"
@@ -33,6 +34,7 @@ func (err Error) Error() string {
 func (s *ClientExecutor) Authorize(ctx context.Context, token string) (*models.User, error) {
 	claims, err := s.jwt.Parse(token)
 	if err != nil {
+		log.Print(err)
 		return nil, echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
 	}
 

@@ -6,11 +6,13 @@ import (
 	"net/http"
 	"time"
 
+	_ "github.com/Spargwy/just-to-do-it/docs"
 	"github.com/Spargwy/just-to-do-it/pkg/auth/model"
 	"github.com/Spargwy/just-to-do-it/pkg/logger"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 type Authenticator interface {
@@ -48,6 +50,8 @@ func New(executor Executor, jwt Authenticator) *Server {
 
 func (s *Server) setupRoutes() {
 	s.router.HTTPErrorHandler = errorHandler
+
+	s.router.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	auth := s.router.Group("/auth")
 	auth.POST("/register", s.Register)
