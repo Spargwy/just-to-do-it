@@ -18,8 +18,9 @@ func (c *ClientExecutor) TaskByID(ctx context.Context, user models.User, id uuid
 	return task, err
 }
 
-func (c *ClientExecutor) CreateTask(ctx context.Context, task models.Task, user models.User) error {
-	task.CreaterID = user.ID
+func (c *ClientExecutor) CreateTask(ctx context.Context, req models.CreateTaskRequest, user models.User) (uuid.UUID, error) {
+	task := models.Task{CreaterID: user.ID}
+	task.Convert(req)
 	err := c.db.CreateTask(&task)
-	return err
+	return task.ID, err
 }

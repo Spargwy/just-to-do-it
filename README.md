@@ -15,9 +15,9 @@ For authorization logic, program need pair of rsa keys.
 You can use existing app.rsa and app.rsa.pub that are locates in root of the project. 
 But for security in production you should generate them with openssl(may need to be installed):
 
-```openssl genrsa -out /opt/keys/app.rsa -outform PEM -pubout -out app.rsa.pub```
+```openssl genrsa -out ./app.rsa```
 
-```openssl rsa -in /opt/keys/app.rsa -outform PEM -pubout -out /opt/keys/app.rsa.pub```
+```openssl rsa -in ./app.rsa -outform PEM -pubout -out ./app.rsa.pub```
 
 docker and project configuration locates in .env file. Configuration options can be find in `config.go` file You can use content from .env.example for start:
 

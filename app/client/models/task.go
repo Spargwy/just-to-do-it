@@ -25,11 +25,11 @@ const (
 )
 
 type CreateTaskRequest struct {
-	ParentTaskID      *uuid.UUID     `json:"parent_task_id"`
-	ResponsibleUserID *uuid.UUID     `json:"responsible_user_id"`
+	ParentTaskID      *uuid.UUID     `json:"parent_task_id" swaggertype:"string"`
+	ResponsibleUserID *uuid.UUID     `json:"responsible_user_id" swaggertype:"string"`
 	Title             string         `json:"title"`
 	Description       *string        `json:"description"`
-	TaskGroupID       *uuid.NullUUID `json:"task_group_id"`
+	TaskGroupID       *uuid.NullUUID `json:"task_group_id" swaggertype:"string"`
 	Priority          *TaskPriority  `json:"priority"`
 	EstimateTime      *int           `json:"estimate_time"`
 }
@@ -49,6 +49,29 @@ type Task struct {
 	TimeSpent         *int           `param:"time_spent" json:"time_spent"`
 	DeletedAt         *time.Time     `param:"deleted_at" json:"deleted_at"`
 	Archived          bool           `param:"archived" json:"archived"`
+}
+
+func (t *Task) Convert(req CreateTaskRequest) {
+	t.Title = req.Title
+	t.CreatedAt = time.Now()
+	if req.Description != nil {
+		t.Description = req.Description
+	}
+	if req.TaskGroupID != nil {
+		t.TaskGroupID = req.TaskGroupID
+	}
+	if req.Priority != nil {
+		t.Priority = req.Priority
+	}
+	if req.EstimateTime != nil {
+		t.EstimateTime = req.EstimateTime
+	}
+	if req.ResponsibleUserID != nil {
+		t.ResponsibleUserID = uuid.NullUUID{Valid: true, UUID: *req.ResponsibleUserID}
+	}
+	if req.ParentTaskID != nil {
+		t.ParentTaskID = uuid.NullUUID{Valid: true, UUID: *req.ParentTaskID}
+	}
 }
 
 type TaskGroup struct {

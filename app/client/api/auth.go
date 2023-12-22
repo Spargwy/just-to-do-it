@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Spargwy/just-to-do-it/app/client/models"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 const (
@@ -31,6 +31,15 @@ func (s *Server) Authorize(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
+// @Summary
+// @Tag Auth
+// @Description
+// @Accept json
+// @Param input body models.RegisterRequest true "signup data"
+// @Success 201 {integer} integer 1
+// @Failure 409
+// @Failure 500
+// @Router /auth/register [post]
 func (s *Server) Register(c echo.Context) error {
 	ctx := c.Request().Context()
 
@@ -49,6 +58,16 @@ func (s *Server) Register(c echo.Context) error {
 	return c.JSON(http.StatusCreated, wrapResponse("created"))
 }
 
+// @Summary
+// @Tag Auth
+// @Description
+// @Accept json
+// @Param input body models.LoginRequest true "signup data"
+// @Success 200 {integer} integer 1
+// @Failure 401
+// @Failure 400
+// @Failure 500
+// @Router /auth/login [post]
 func (s *Server) Login(c echo.Context) error {
 	ctx := c.Request().Context()
 
