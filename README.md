@@ -15,7 +15,7 @@ But for security in production you should generate them with openssl(may need to
 
 ```openssl rsa -in /opt/keys/tasker.rsa -outform PEM -pubout -out /opt/keys/tasker.rsa.pub```
 
-docker and project configuration locates in .env file. You can use content from .env.example for start:
+docker and project configuration locates in .env file. Configuration options can be find in `config.go` file You can use content from .env.example for start:
 
 ```cat .env.example > .env```
 
@@ -23,6 +23,8 @@ docker and project configuration locates in .env file. You can use content from 
 start db with 
 
 ```cd docker && docker-compose up -d ```
+
+
 
 Run project with
 

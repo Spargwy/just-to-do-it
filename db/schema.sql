@@ -88,7 +88,8 @@ CREATE TABLE public.tasks (
     estimate_time integer,
     time_spent integer,
     deleted_at timestamp with time zone,
-    archived boolean
+    archived boolean,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -214,4 +215,5 @@ ALTER TABLE ONLY public.tasks
 INSERT INTO public.schema_migrations (version) VALUES
     ('20231220192024'),
     ('20231220192421'),
-    ('20231220192616');
+    ('20231220192616'),
+    ('20231222043954');

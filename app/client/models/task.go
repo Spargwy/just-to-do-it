@@ -35,19 +35,20 @@ type CreateTaskRequest struct {
 }
 
 type Task struct {
-	ID                uuid.UUID
-	ParentTaskID      uuid.NullUUID
-	CreaterID         uuid.UUID
-	ResponsibleUserID uuid.NullUUID
-	Title             string
-	Description       *string
-	Status            *string
-	TaskGroupID       *uuid.NullUUID
-	Priority          *TaskPriority
-	EstimateTime      *int
-	TimeSpent         *int
-	DeletedAt         *time.Time
-	Archived          bool
+	ID                uuid.UUID      `param:"id" json:"id"`
+	CreatedAt         time.Time      `param:"created_at" json:"created_at"`
+	ParentTaskID      uuid.NullUUID  `param:"parent_task_id" json:"parentTaskID"`
+	CreaterID         uuid.UUID      `param:"creater_id" json:"creater_id"`
+	ResponsibleUserID uuid.NullUUID  `param:"responsible_user_id" json:"responsible_user_id"`
+	Title             string         `param:"title" json:"title"`
+	Description       *string        `param:"description" json:"description"`
+	Status            *string        `param:"status" json:"status"`
+	TaskGroupID       *uuid.NullUUID `param:"task_group_id" json:"task_group_id"`
+	Priority          *TaskPriority  `param:"priority" json:"priority"`
+	EstimateTime      *int           `param:"estimate_time" json:"estimate_time"`
+	TimeSpent         *int           `param:"time_spent" json:"time_spent"`
+	DeletedAt         *time.Time     `param:"deleted_at" json:"deleted_at"`
+	Archived          bool           `param:"archived" json:"archived"`
 }
 
 type TaskGroup struct {

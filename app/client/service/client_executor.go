@@ -11,9 +11,9 @@ type ClientDB interface {
 	CreateUser(*models.User) error
 	GetUserByID(id uuid.UUID) (models.User, error)
 	GetUserByEmail(email string) (models.User, error)
-	TasksList() ([]*models.Task, error)
-	TaskByID(id uuid.UUID) (*models.Task, error)
-	CreateTask() error
+	TasksList(whereCondition string, user_id uuid.UUID) ([]*models.Task, error)
+	TaskByID(id, user_id uuid.UUID) (*models.Task, error)
+	CreateTask(task *models.Task) error
 }
 
 type Encrypter interface {

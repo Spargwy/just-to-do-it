@@ -53,9 +53,10 @@ func (s *Server) setupRoutes() {
 	auth.POST("/register", s.Register)
 	auth.POST("/login", s.Login)
 
-	home := s.router.Group("/", s.Authorize)
-	home.GET("", func(ctx echo.Context) error { return ctx.JSON(http.StatusOK, "Hello") })
-
+	tasks := s.router.Group("", s.Authorize)
+	tasks.GET("/tasks", s.TasksList)
+	tasks.GET("/task/:id", s.TaskByID)
+	tasks.POST("/task", s.CreateTask)
 }
 
 func errorHandler(err error, c echo.Context) {
