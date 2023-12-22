@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/Spargwy/just-to-do-it/pkg/logger"
 	"github.com/go-pg/pg/v10"
 )
 
@@ -46,7 +47,7 @@ func (d dbLogger) BeforeQuery(ctx context.Context, q *pg.QueryEvent) (context.Co
 func (d dbLogger) AfterQuery(ctx context.Context, q *pg.QueryEvent) error {
 	sql, err := q.FormattedQuery()
 	mes := string(sql)
-	log.Println(mes, err)
+	logger.Info(mes, err)
 
 	return nil
 }

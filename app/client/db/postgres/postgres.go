@@ -36,16 +36,35 @@ func (c *ClientPGDB) Ping(ctx context.Context) error {
 	return c.db.Ping(ctx)
 }
 
-func (c *ClientPGDB) TasksList() ([]*models.Task, error) {
-	return nil, nil
+func (c *ClientPGDB) TasksList(whereCondition string, user_id uuid.UUID) ([]*models.Task, error) {
+	row := []*models.Task{}
+	if whereCondition != "" {
+		err := c.db.Model(&row).
+			Where(whereCondition).
+			Where("creater_id = ?", user_id).
+			Select()
+		return row, err
+	} else {
+		err := c.db.Model(&row).Where("creater_id = ?", user_id).Select()
+		return row, err
+	}
 }
 
-func (c *ClientPGDB) TaskByID(id uuid.UUID) (*models.Task, error) {
-	return nil, nil
+func (c *ClientPGDB) TaskByID(id uuid.UUID, user_id uuid.UUID) (*models.Task, error) {
+	row := models.Task{}
+	err := c.db.Model(&row).Where("id = ? and creater_id = ?", id, user_id).Select()
+	if err == pg.ErrNoRows {
+		return nil, nil
+	}
+	return &row, err
 }
 
-func (c *ClientPGDB) CreateTask() error {
-	return nil
+func (c *ClientPGDB) CreateTask(task *models.Task) error {
+	return c.db.RunInTransaction(context.Background(), func(tx *pg.Tx) error {
+		_, err := tx.Model(task).Insert()
+
+		return err
+	})
 }
 
 func (c *ClientPGDB) CreateUser(user *models.User) error {

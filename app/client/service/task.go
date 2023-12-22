@@ -1,18 +1,25 @@
 package service
 
 import (
+	"context"
+
 	"github.com/Spargwy/just-to-do-it/app/client/models"
 	"github.com/google/uuid"
 )
 
-func (s *ClientExecutor) TasksList() ([]*models.Task, error) {
-	return nil, nil
+func (c *ClientExecutor) TasksList(ctx context.Context, user models.User, filterParams map[string][]string) ([]*models.Task, error) {
+	where := buildWhereConditionFromParams(filterParams)
+	tasks, err := c.db.TasksList(where, user.ID)
+	return tasks, err
 }
 
-func (s *ClientExecutor) TaskByID(id uuid.UUID) (*models.Task, error) {
-	return nil, nil
+func (c *ClientExecutor) TaskByID(ctx context.Context, user models.User, id uuid.UUID) (*models.Task, error) {
+	task, err := c.db.TaskByID(id, user.ID)
+	return task, err
 }
 
-func (s *ClientExecutor) CreateTask() error {
-	return nil
+func (c *ClientExecutor) CreateTask(ctx context.Context, task models.Task, user models.User) error {
+	task.CreaterID = user.ID
+	err := c.db.CreateTask(&task)
+	return err
 }
