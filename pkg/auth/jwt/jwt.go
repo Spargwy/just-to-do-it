@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	privateKeyPath = "tasker.rsa"
-	publicKeyPath  = "tasker.rsa.pub"
+	privateKeyPath = "app.rsa"
+	publicKeyPath  = "app.rsa.pub"
 )
 
 type Authenticator struct {

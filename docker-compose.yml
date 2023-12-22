@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  db:
+    container_name: db
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    volumes:
+      - ./_data/db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_preload_libraries=pg_stat_statements"
+
+  tasker:
+    container_name: tasker
+    build:
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    volumes:
+      - ./_data/keys:/opt/keys
+    depends_on:
+      - "db"
+    ports:
+      - "3000:3000"
+networks:
+  default:
+    name: tasks-network
