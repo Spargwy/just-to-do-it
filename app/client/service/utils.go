@@ -5,19 +5,35 @@ import (
 	"strings"
 )
 
+// Not secure because of sql injection. TO-DO fix
 func buildWhereConditionFromParams(filterParams map[string][]string) string {
-	whereCondition := strings.Builder{}
+	conds := []string{}
 
-	paramsLength := len(filterParams)
-	i := 1
-	for param, value := range filterParams {
-		if i == paramsLength {
-			whereCondition.WriteString(fmt.Sprintf("%s = '%s'", param, value[0]))
-		} else {
-			whereCondition.WriteString(fmt.Sprintf("%s = '%s' and ", param, value[0]))
-		}
-		i++
+	allowedParams := map[string]interface{}{
+		"id":                  nil,
+		"created_at":          nil,
+		"parent_task_id":      nil,
+		"creater_id":          nil,
+		"responsible_user_id": nil,
+		"title":               nil,
+		"description":         nil,
+		"status":              nil,
+		"task_group_id":       nil,
+		"priority":            nil,
+		"estimate_time":       nil,
+		"time_spent":          nil,
+		"deleted_at":          nil,
+		"archived":            nil,
 	}
 
-	return whereCondition.String()
+	for param := range filterParams {
+		_, ok := allowedParams[param]
+		if !ok {
+			continue
+		}
+
+		conds = append(conds, param+fmt.Sprintf(" = :%s", param))
+	}
+
+	return strings.Join(conds, " and ")
 }

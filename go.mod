@@ -21,6 +21,7 @@ require (
 	github.com/go-openapi/swag v0.22.6 // indirect
 	github.com/go-pg/zerochecker v0.2.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jmoiron/sqlx v1.3.5 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
@@ -46,6 +47,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.5.0
 	github.com/labstack/echo v3.3.10+incompatible
+	github.com/lib/pq v1.10.9
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.3
 	golang.org/x/sys v0.15.0 // indirect

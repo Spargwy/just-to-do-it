@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/Spargwy/just-to-do-it/app/client/models"
@@ -42,8 +41,14 @@ func (s *Server) TasksList(c echo.Context) error {
 	}
 
 	filterParams := c.QueryParams()
+	task := models.Task{}
+	err := c.Bind(&task)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error)
+	}
 
-	tasks, err := s.executor.TasksList(ctx, user, filterParams)
+	task.CreaterID = user.ID
+	tasks, err := s.executor.TasksList(ctx, user, filterParams, task)
 	if err != nil {
 		logger.Info("TasksList: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
@@ -74,13 +79,13 @@ func (s *Server) TaskByID(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "task_id is not uuid")
 	}
 
-	tasks, err := s.executor.TaskByID(ctx, user, taskID)
+	res, err := s.executor.TaskByID(ctx, user, taskID)
 	if err != nil {
 		logger.Info("TasksList: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	return c.JSON(http.StatusOK, tasks)
+	return c.JSON(http.StatusOK, res)
 }
 
 // @Summary
@@ -108,18 +113,16 @@ func (s *Server) CreateTask(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	log.Print(req.Title)
 	//TO-DO implement playground validator
 	if req.Title == "" {
 		return echo.NewHTTPError(http.StatusBadRequest, "field title must be provided")
 	}
 
-	taskID, err := s.executor.CreateTask(ctx, req, user)
+	err = s.executor.CreateTask(ctx, req, user)
 	if err != nil {
-		logger.Info("TasksList: %v", err)
+		logger.Info("CreateTask: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	logger.Info("user %v created task %v", user.ID, taskID)
 	return c.JSON(http.StatusCreated, wrapResponse("task created"))
 }

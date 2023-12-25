@@ -2,14 +2,13 @@ package service
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/Spargwy/just-to-do-it/app/client/models"
 	"github.com/Spargwy/just-to-do-it/pkg/auth/model"
 	"github.com/Spargwy/just-to-do-it/pkg/logger"
-	"github.com/go-pg/pg/v10"
 	"github.com/labstack/echo"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -34,12 +33,12 @@ func (err Error) Error() string {
 func (s *ClientExecutor) Authorize(ctx context.Context, token string) (*models.User, error) {
 	claims, err := s.jwt.Parse(token)
 	if err != nil {
-		log.Print(err)
+		logger.Info(err.Error())
 		return nil, echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
 	}
 
 	user, err := s.db.GetUserByID(claims.UserID)
-	if err != nil && err == pg.ErrNoRows {
+	if err != nil && err == sql.ErrNoRows {
 		return nil, echo.NewHTTPError(http.StatusUnauthorized, "user not found")
 	}
 
@@ -49,7 +48,7 @@ func (s *ClientExecutor) Authorize(ctx context.Context, token string) (*models.U
 func (s *ClientExecutor) Register(ctx context.Context, req models.RegisterRequest) error {
 	exists, err := s.db.UserExistsByEmail(req.Email)
 	if err != nil {
-		logger.Debug(fmt.Errorf("userExistsByEmail: %v", err))
+		logger.Info("userExistsByEmail: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "internal server error")
 	}
 
@@ -59,7 +58,7 @@ func (s *ClientExecutor) Register(ctx context.Context, req models.RegisterReques
 
 	hashed, err := bcrypt.GenerateFromPassword([]byte(req.Password), 12)
 	if err != nil {
-		logger.Debug(fmt.Errorf("generateFromPassword: %v", err))
+		logger.Info("generateFromPassword: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "internal server error")
 	}
 
@@ -74,11 +73,11 @@ func (s *ClientExecutor) Register(ctx context.Context, req models.RegisterReques
 
 func (s *ClientExecutor) Login(ctx context.Context, req models.LoginRequest) (*models.LoginResponse, error) {
 	user, err := s.db.GetUserByEmail(req.Email)
-	if err != nil && err == pg.ErrNoRows {
+	if err != nil && err == sql.ErrNoRows {
 		return nil, echo.NewHTTPError(http.StatusUnauthorized, "user not found")
 	}
 	if err != nil {
-		logger.Debug(fmt.Errorf("etUserByEmail: %v", err))
+		logger.Info("GetUserByEmail: %v", err)
 		return nil, echo.ErrInternalServerError
 	}
 
@@ -90,7 +89,7 @@ func (s *ClientExecutor) Login(ctx context.Context, req models.LoginRequest) (*m
 		UserID: user.ID,
 	})
 	if err != nil {
-		logger.Debug(fmt.Errorf("generate: %v", err))
+		logger.Info("generate: %v", err)
 		return nil, echo.ErrInternalServerError
 	}
 
