@@ -17,10 +17,7 @@ type Config struct {
 }
 
 type Database struct {
-	Client          string `envconfig:"CLIENT_DB"`
-	EnableDBLog     bool   `envconfig:"ENABLE_DB_LOG"`
-	EnableLongDBLog bool   `envconfig:"ENABLE_LONG_DB_LOG"`
-	MaxRetries      int    `envconfig:"MAX_RETRIES"`
+	Client string `envconfig:"CLIENT_DB"`
 }
 
 type Server struct {
