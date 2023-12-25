@@ -11,8 +11,8 @@ type ClientDB interface {
 	CreateUser(*models.User) error
 	GetUserByID(id uuid.UUID) (models.User, error)
 	GetUserByEmail(email string) (models.User, error)
-	TasksList(whereCondition string, user_id uuid.UUID) ([]*models.Task, error)
-	TaskByID(id, user_id uuid.UUID) (*models.Task, error)
+	TasksList(whereCondition string, task models.Task) ([]*models.Task, error)
+	TaskByID(id uuid.UUID) (*models.Task, error)
 	CreateTask(task *models.Task) error
 }
 

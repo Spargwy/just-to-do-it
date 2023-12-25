@@ -19,9 +19,8 @@ func Test_buildWhereConditionFromParams(t *testing.T) {
 					"archived": {"false"},
 				},
 			},
-			want: "title = 'cook diner' and archived = 'false'",
-		},
-	}
+			want: "title = :title and archived = :archived",
+		}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := buildWhereConditionFromParams(tt.args.filterParams); got != tt.want {

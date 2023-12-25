@@ -19,7 +19,7 @@ But for security in production you should generate them with openssl(may need to
 
 ```openssl rsa -in ./app.rsa -outform PEM -pubout -out ./app.rsa.pub```
 
-docker and project configuration locates in .env file. Configuration options can be find in `config.go` file You can use content from .env.example for start:
+docker and project configuration locates in .env file. Configuration options can be found in `config.go` file. You can use content from .env.example for start:
 
 ```cat .env.example > .env```
 
@@ -34,3 +34,10 @@ apply migrations
 Also, you can run it manually if u have go
 
 ``` go run app/client/cmd/main.go```
+
+
+Testing:
+- start test db: 
+```docker-compose -f postgres.test.yml up -d```
+- apply migrations: 
+```cat db/schema.sql | psql postgres://tasker:password@7232:7232/todo```
