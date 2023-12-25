@@ -3,10 +3,10 @@ package postgres
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/Spargwy/just-to-do-it/app/client/models"
 	"github.com/Spargwy/just-to-do-it/pkg/config"
+	"github.com/Spargwy/just-to-do-it/pkg/db"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -21,14 +21,9 @@ func NewPostgres(cfg config.Database) (*ClientPGDB, error) {
 
 	var err error
 
-	clientDB.db, err = sqlx.Connect("postgres", cfg.Client)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	if err != nil {
-		return nil, fmt.Errorf("initialize db: %v", err)
-	}
+	clientDB.db, err = db.NewPostgres(db.DBConfig{
+		DBURL: cfg.Client,
+	})
 
 	return &clientDB, err
 }
