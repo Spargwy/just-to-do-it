@@ -1,10 +1,10 @@
 version: "3.8"
 services:
-  postgres:
+  test-db:
     image: postgres:16-alpine
     env_file:
       - ./.env
     volumes:
-      - ./_data/db-data:/var/lib/postgresql/data
+      - ./_test_data/db-data:/var/lib/postgresql/data
     ports:
       - "7232:5432"

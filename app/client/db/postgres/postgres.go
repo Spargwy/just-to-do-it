@@ -28,10 +28,6 @@ func NewPostgres(cfg config.Database) (*ClientPGDB, error) {
 	return &clientDB, err
 }
 
-func (c *ClientPGDB) Ping(ctx context.Context) error {
-	return c.db.Ping()
-}
-
 func (c *ClientPGDB) TasksList(whereCondition string, task models.Task) ([]*models.Task, error) {
 	var sqlTask Task
 	sqlTask.ConvertToSqlStruct(task)
@@ -81,7 +77,7 @@ func (c *ClientPGDB) CreateTask(t *models.Task) error {
 		return fmt.Errorf("begin tx: %v", err)
 	}
 	defer tx.Rollback()
-	_, err = tx.NamedExec(`
+	rows, err := tx.NamedQuery(`
 	insert into tasks(
 		creater_id,
 		created_at,
@@ -110,9 +106,16 @@ func (c *ClientPGDB) CreateTask(t *models.Task) error {
 		:time_spent,
 		:deleted_at,
 		:archived
-	)`, task)
+	) returning id`, task)
 	if err != nil {
 		return err
+	}
+
+	for rows.Next() {
+		err = rows.StructScan(t)
+		if err != nil {
+			return fmt.Errorf("StructScan: %v", err)
+		}
 	}
 	err = tx.Commit()
 
@@ -128,21 +131,23 @@ func (c *ClientPGDB) CreateUser(u *models.User) error {
 	}
 
 	defer tx.Rollback()
-	_, err = tx.NamedExec(`
+	rows, err := tx.NamedQuery(`
 	insert into users(email, name, hashed_password) values(
 		:email,
 		:name,
-		:hashed_password	
-	)`, &user)
+		:hashed_password
+	) returning id`, &user)
 	if err != nil {
-		execError := fmt.Errorf("exec: %v", err)
-		err = tx.Rollback()
-		if err != nil {
-			return fmt.Errorf("rollback: %v", err)
-		}
-
-		return execError
+		return err
 	}
+
+	for rows.Next() {
+		err = rows.StructScan(u)
+		if err != nil {
+			return fmt.Errorf("StructScan: %v", err)
+		}
+	}
+
 	err = tx.Commit()
 
 	return err

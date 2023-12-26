@@ -48,7 +48,7 @@ func (s *Server) TasksList(c echo.Context) error {
 	}
 
 	task.CreaterID = user.ID
-	tasks, err := s.executor.TasksList(ctx, user, filterParams, task)
+	tasks, err := s.executor.TasksList(ctx, filterParams, task)
 	if err != nil {
 		logger.Info("TasksList: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
@@ -69,7 +69,7 @@ func (s *Server) TasksList(c echo.Context) error {
 func (s *Server) TaskByID(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	user, ok := c.Get("current-client").(models.User)
+	_, ok := c.Get("current-client").(models.User)
 	if !ok {
 		return c.JSON(http.StatusUnauthorized, "not authorized")
 	}
@@ -79,7 +79,7 @@ func (s *Server) TaskByID(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "task_id is not uuid")
 	}
 
-	res, err := s.executor.TaskByID(ctx, user, taskID)
+	res, err := s.executor.TaskByID(ctx, taskID)
 	if err != nil {
 		logger.Info("TasksList: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
@@ -118,11 +118,11 @@ func (s *Server) CreateTask(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "field title must be provided")
 	}
 
-	err = s.executor.CreateTask(ctx, req, user)
+	res, err := s.executor.CreateTask(ctx, req, user)
 	if err != nil {
 		logger.Info("CreateTask: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	return c.JSON(http.StatusCreated, wrapResponse("task created"))
+	return c.JSON(http.StatusCreated, res)
 }
