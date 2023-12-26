@@ -18,6 +18,7 @@ type Config struct {
 
 type Database struct {
 	Client string `envconfig:"CLIENT_DB"`
+	TestDB string `envconfig:"TEST_DATABASE_URL"`
 }
 
 type Server struct {

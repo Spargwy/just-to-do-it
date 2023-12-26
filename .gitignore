@@ -3,3 +3,5 @@
 /.vscode
 **/_data/
 **/*.env
+**/_test_data/
+

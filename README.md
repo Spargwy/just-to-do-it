@@ -40,4 +40,6 @@ Testing:
 - start test db: 
 ```docker-compose -f postgres.test.yml up -d```
 - apply migrations: 
-```cat db/schema.sql | psql postgres://tasker:password@7232:7232/todo```
+```cat db/schema.sql | psql postgres://tasker:password@localhost:7232/todo```
+
+```go run ./...```
