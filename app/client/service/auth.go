@@ -10,7 +10,6 @@ import (
 	"github.com/Spargwy/just-to-do-it/pkg/auth/model"
 	"github.com/Spargwy/just-to-do-it/pkg/logger"
 	"github.com/labstack/echo"
-	"golang.org/x/crypto/bcrypt"
 )
 
 var (
@@ -24,10 +23,6 @@ type Error struct {
 
 func Errorf(s string, args ...interface{}) Error {
 	return Error{s: fmt.Sprintf(s, args...)}
-}
-
-func (err Error) Error() string {
-	return err.s
 }
 
 func (s *ClientExecutor) Authorize(ctx context.Context, token string) (*models.User, error) {
@@ -56,7 +51,7 @@ func (s *ClientExecutor) Register(ctx context.Context, req models.RegisterReques
 		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("user with email %s already registered", req.Email).Error())
 	}
 
-	hashed, err := bcrypt.GenerateFromPassword([]byte(req.Password), 12)
+	hashed, err := s.encrypter.GenerateHash(req.Password)
 	if err != nil {
 		logger.Info("generateFromPassword: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "internal server error")
@@ -65,7 +60,7 @@ func (s *ClientExecutor) Register(ctx context.Context, req models.RegisterReques
 	err = s.db.CreateUser(&models.User{
 		Email:          req.Email,
 		Name:           req.Name,
-		HashedPassword: string(hashed),
+		HashedPassword: hashed,
 	})
 
 	return err

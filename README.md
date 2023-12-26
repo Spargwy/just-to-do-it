@@ -42,4 +42,4 @@ Testing:
 - apply migrations: 
 ```cat db/schema.sql | psql postgres://tasker:password@localhost:7232/todo```
 
-```go run ./...```
+```go test ./...```

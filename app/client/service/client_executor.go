@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
+//go:generate moq -out mocks.go . ClientDB Encrypter Authenticator
 type ClientDB interface {
 	UserExistsByEmail(email string) (bool, error)
 	CreateUser(*models.User) error

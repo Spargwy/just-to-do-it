@@ -1,84 +1,14 @@
 package postgres
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/Spargwy/just-to-do-it/app/client/models"
 	"github.com/Spargwy/just-to-do-it/pkg/config"
 	"github.com/Spargwy/just-to-do-it/pkg/db"
-	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
 )
-
-func TestClientPGDB_TasksList(t *testing.T) {
-	type fields struct {
-		db *sqlx.DB
-	}
-	type args struct {
-		whereCondition string
-		task           models.Task
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    []*models.Task
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			c := &ClientPGDB{
-				db: tt.fields.db,
-			}
-			got, err := c.TasksList(tt.args.whereCondition, tt.args.task)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ClientPGDB.TasksList() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ClientPGDB.TasksList() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestClientPGDB_TaskByID(t *testing.T) {
-	type fields struct {
-		db *sqlx.DB
-	}
-	type args struct {
-		id uuid.UUID
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    *models.Task
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			c := &ClientPGDB{
-				db: tt.fields.db,
-			}
-			got, err := c.TaskByID(tt.args.id)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ClientPGDB.TaskByID() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ClientPGDB.TaskByID() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
 func TestClientPGDB_Tasks(t *testing.T) {
 	cfg := config.LoadConfig("../../../../")
@@ -232,70 +162,4 @@ func TestClientPGDB_Users(t *testing.T) {
 	}
 
 	require.Equal(t, user, userByID)
-}
-
-func TestClientPGDB_UserExistsByEmail(t *testing.T) {
-	type fields struct {
-		db *sqlx.DB
-	}
-	type args struct {
-		email string
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    bool
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			c := &ClientPGDB{
-				db: tt.fields.db,
-			}
-			got, err := c.UserExistsByEmail(tt.args.email)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ClientPGDB.UserExistsByEmail() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("ClientPGDB.UserExistsByEmail() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestClientPGDB_GetUserByEmail(t *testing.T) {
-	type fields struct {
-		db *sqlx.DB
-	}
-	type args struct {
-		email string
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		want    models.User
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			c := &ClientPGDB{
-				db: tt.fields.db,
-			}
-			got, err := c.GetUserByEmail(tt.args.email)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ClientPGDB.GetUserByEmail() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ClientPGDB.GetUserByEmail() = %v, want %v", got, tt.want)
-			}
-		})
-	}
 }
